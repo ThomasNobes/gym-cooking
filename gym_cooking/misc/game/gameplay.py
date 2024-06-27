@@ -57,6 +57,7 @@ class GamePlay(Game):
                 self.current_agent.action = action
                 interact(self.current_agent, self.world)
 
+
     def on_execute(self):
         if self.on_init() == False:
             self._running = False

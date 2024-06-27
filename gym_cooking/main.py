@@ -54,6 +54,7 @@ def fix_seed(seed):
     np.random.seed(seed)
     random.seed(seed)
 
+
 def initialize_agents(arglist):
     real_agents = []
 
@@ -81,6 +82,7 @@ def initialize_agents(arglist):
                     real_agents.append(real_agent)
 
     return real_agents
+
 
 def main_loop(arglist):
     """The main loop for running experiments."""
@@ -129,5 +131,3 @@ if __name__ == '__main__':
             model_types))) == arglist.num_agents, "num_agents should match the number of models specified"
         fix_seed(seed=arglist.seed)
         main_loop(arglist=arglist)
-
-
