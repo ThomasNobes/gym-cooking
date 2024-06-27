@@ -207,7 +207,9 @@ class OvercookedEnvironment(gym.Env):
         # Get a plan-representation observation.
         new_obs = copy.copy(self)
         # Get an image observation
-        image_obs = self.game.get_image_obs()
+        image_obs = None
+        if hasattr(self, 'game'):
+            image_obs = self.game.get_image_obs()
 
         done = self.done()
         reward = self.reward()
