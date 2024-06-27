@@ -14,3 +14,11 @@ KeyToTuple = {
     pygame.K_RIGHT : ( 1,  0),  #275
     pygame.K_LEFT  : (-1,  0),  #276
 }
+
+ActionToString = {
+    (0, -1)  :   "UP",
+    (0, 1)   :   "DOWN",
+    (1, 0)   :   "RIGHT",
+    (-1, 0)  :   "LEFT",
+    (0, 0)   :   "WAIT",
+}
