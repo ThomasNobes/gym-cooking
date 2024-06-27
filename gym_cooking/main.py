@@ -42,10 +42,10 @@ def parse_arguments():
     # Models
     # Valid options: `bd` = Bayes Delegation; `up` = Uniform Priors
     # `dc` = Divide & Conquer; `fb` = Fixed Beliefs; `greedy` = Greedy
-    parser.add_argument("--model1", type=str, default=None, help="Model type for agent 1 (bd, up, dc, fb, or greedy)")
-    parser.add_argument("--model2", type=str, default=None, help="Model type for agent 2 (bd, up, dc, fb, or greedy)")
-    parser.add_argument("--model3", type=str, default=None, help="Model type for agent 3 (bd, up, dc, fb, or greedy)")
-    parser.add_argument("--model4", type=str, default=None, help="Model type for agent 4 (bd, up, dc, fb, or greedy)")
+    parser.add_argument("--model1", type=str, default=None, help="Model type for agent 1 (random, user, advanced)")
+    parser.add_argument("--model2", type=str, default=None, help="Model type for agent 2 (random, user, advacned)")
+    parser.add_argument("--model3", type=str, default=None, help="Model type for agent 3 (random, user, advacned)")
+    parser.add_argument("--model4", type=str, default=None, help="Model type for agent 4 (random, user, advacned)")
 
     return parser.parse_args()
 
@@ -121,11 +121,13 @@ def main_loop(arglist):
 
 if __name__ == '__main__':
     arglist = parse_arguments()
+    # test environment for manually playing the game
     if arglist.play:
         env = gym.envs.make("gym_cooking:overcookedEnv-v0", arglist=arglist)
         env.reset()
         game = GamePlay(env.filename, env.world, env.sim_agents)
         game.on_execute()
+    # test environment for running experiments
     else:
         model_types = [arglist.model1, arglist.model2, arglist.model3, arglist.model4]
         assert len(list(filter(lambda x: x is not None,

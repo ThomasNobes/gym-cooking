@@ -11,9 +11,17 @@ from navigation_planner.utils import manhattan_dist
 from utils.core import Object, GridSquare, Counter
 
 
+##################################################################################
+# README! --- World Class: structure and helper functions of the environment
+# Read through this class to get a sense of how the environment is structured,
+# and how the environment can be interacted with.
+##################################################################################
 class World:
     """World class that hold all of the non-agent objects in the environment."""
-    NAV_ACTIONS = [(0, 1), (0, -1), (-1, 0), (1, 0)]
+    NAV_ACTIONS = [(0, 1),  # move RIGHT
+                   (0, -1), # move LEFT
+                   (-1, 0), # move UP
+                   (1, 0)]  # move DOWN
 
     def __init__(self, arglist):
         self.rep = [] # [row0, row1, ..., rown]
