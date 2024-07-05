@@ -37,6 +37,7 @@ def parse_arguments():
 
     # Visualizations
     parser.add_argument("--play", action="store_true", default=False, help="Play interactive game with keys")
+    parser.add_argument("--replay", type=str, default=None, help="Visualise a replay of a saved game. Example usage: python main.py --replay misc/metrics/pickles/partial-divider_salad_agents2_seed1_model1-random_model2-random.pkl")
     parser.add_argument("--record", action="store_true", default=False, help="Save observation at each time step as an image in misc/game/record")
 
     # Models
@@ -127,6 +128,12 @@ if __name__ == '__main__':
         env.reset()
         game = GamePlay(env.filename, env.world, env.sim_agents)
         game.on_execute()
+    # test environment for replaying a saved game
+    elif arglist.replay is not None:
+        env = gym.envs.make("gym_cooking:overcookedEnv-v0", arglist=arglist)
+        env.reset()
+        game = GamePlay(env.filename, env.world, env.sim_agents)
+        game.on_replay(arglist.replay)
     # test environment for running experiments
     else:
         model_types = [arglist.model1, arglist.model2, arglist.model3, arglist.model4]
