@@ -2,7 +2,7 @@
 # from gym_cooking.envs import OvercookedEnvironment
 from recipe_planner.recipe import *
 from utils.world import World
-from utils.agent import RealAgent, SimAgent, COLORS
+from utils.agent import YourAgent, SimAgent, COLORS
 from utils.core import *
 from misc.game.gameplay import GamePlay
 from misc.metrics.metrics_bag import Bag
@@ -56,7 +56,7 @@ def fix_seed(seed):
 
 
 def initialize_agents(arglist):
-    real_agents = []
+    agents = []
 
     with open('utils/levels/{}.txt'.format(arglist.level), 'r') as f:
         phase = 1
@@ -72,16 +72,16 @@ def initialize_agents(arglist):
 
             # phase 3: read in agent locations (up to num_agents)
             elif phase == 3:
-                if len(real_agents) < arglist.num_agents:
+                if len(agents) < arglist.num_agents:
                     loc = line.split(' ')
-                    real_agent = RealAgent(
+                    agent = YourAgent(
                             arglist=arglist,
-                            name='agent-'+str(len(real_agents)+1),
-                            id_color=COLORS[len(real_agents)],
+                            name='agent-'+str(len(agents)+1),
+                            id_color=COLORS[len(agents)],
                             recipes=recipes)
-                    real_agents.append(real_agent)
+                    agents.append(agent)
 
-    return real_agents
+    return agents
 
 
 def main_loop(arglist):
@@ -89,8 +89,7 @@ def main_loop(arglist):
     print("Initializing environment and agents.")
     env = gym.envs.make("gym_cooking:overcookedEnv-v0", arglist=arglist)
     obs = env.reset()
-    # game = GameVisualize(env)
-    real_agents = initialize_agents(arglist=arglist)
+    agents = initialize_agents(arglist=arglist)    
 
     # Info bag for saving pkl files
     bag = Bag(arglist=arglist, filename=env.filename)
@@ -99,24 +98,26 @@ def main_loop(arglist):
     while not env.done():
         action_dict = {}
 
-        for agent in real_agents:
+        for agent in agents:
             action = agent.select_action(obs=obs)
             action_dict[agent.name] = action
 
+        # NOTE: read /envs/overcooked_environment.py
         obs, reward, done, info = env.step(action_dict=action_dict)
 
         # Agents
-        for agent in real_agents:
-            agent.refresh_subtasks(world=env.world)
+        for agent in agents:
+            if type(agent) == YourAgent:
+                agent.refresh_subtasks(world=env.world)
 
         # Saving info
-        bag.add_status(cur_time=info['t'], real_agents=real_agents)
-
+        bag.add_status(cur_time=info['t'], agents=agents)
 
     # Saving final information before saving pkl file
     bag.set_collisions(collisions=env.collisions)
     bag.set_termination(termination_info=env.termination_info,
             successful=env.successful)
+
 
 if __name__ == '__main__':
     arglist = parse_arguments()

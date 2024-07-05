@@ -40,8 +40,8 @@ class Bag:
         self.data["collisions"] = collisions
 
 
-    def add_status(self, cur_time, real_agents):
-        for a in real_agents:
+    def add_status(self, cur_time, agents):
+        for a in agents:
             self.data["states"][a.name].append(copy.copy(a.location))
             self.data["holding"][a.name].append(a.get_holding())
             self.data["actions"][a.name].append(a.action)
@@ -54,7 +54,7 @@ class Bag:
                 self.data["bayes"][a.name][cur_time].append((task_combo, p))
 
         incomplete_subtasks = set(self.data["all_subtasks"])
-        for a in real_agents:
+        for a in agents:
             incomplete_subtasks = incomplete_subtasks & set(a.incomplete_subtasks)
         self.data["num_completed_subtasks"].append(self.data["num_total_subtasks"] - len(incomplete_subtasks))
 

@@ -18,12 +18,127 @@ import numpy as np
 import copy
 from termcolor import colored as color
 from collections import namedtuple
+from abc import ABCMeta, abstractmethod
 
 AgentRepr = namedtuple("AgentRepr", "name location holding")
 
 # Colors for agents.
 COLORS = ['blue', 'magenta', 'yellow', 'green']
 
+
+##################################################################################
+# README! --- Agent Classes
+# Here, we define:
+# 1) BaseAgent: Base class for all agents. 
+#       - IMPORTANT: Read through this class to understand the basic structure
+#           and to understand the basic variables and functions available to you.
+#       - You do not need to modify this class, but feel free to do so if you want.
+#
+# 2) YourAgent: Your agent that performs task inference and plans.
+#       - This class is a template for your agent implementation.
+#       - You must modify this class to implement your own agent.
+#       - You can add your own class variables and functions.
+#       - Feel free to rename this class and to add new agent classes to suit
+#           your own implementation and strategic choices.
+##################################################################################
+class BaseAgent:
+    """Base Agent object: READ THROUGH THIS CLASS TO UNDERSTAND THE STRUCTURE."""
+    #-----Feel free to add your own class variables-----
+    
+    def __init__(self, arglist, name, id_color, recipes):
+        #-----Feel free to add to the init procedure-----
+        self.arglist = arglist
+        self.name = name
+        self.color = id_color
+        self.recipes = recipes
+        self.holding = None
+
+        self.model_type = agent_settings(arglist, name)
+        self.priors = 'random'
+
+        # Navigation planner.
+        self.planner = None
+
+    # Default representation prints agent name in colour
+    def __str__(self):
+        return color(self.name[-1], self.color)
+
+    # Defines copy method to duplicate your agents
+    def __copy__(self, ):
+        a = self.__class__(arglist=self.arglist,
+                name=self.name,
+                id_color=self.color,
+                recipes=self.recipes)
+        a.__dict__ = self.__dict__.copy()
+        if self.holding is not None:
+            a.holding = copy.copy(self.holding)
+        return a
+
+    # Helper for printing agent holding state & object
+    def get_holding(self):
+        if self.holding is None:
+            return 'None'
+        return self.holding.full_name
+
+    # IMPORTANT: This function is called by the environment to get the next action.
+    # You must implement this function in your agent class.
+    @abstractmethod
+    def select_action(self, obs):
+        """Return next action for this agent given observations."""
+        pass
+
+    # Helper for updating player position for navigation
+    def get_action_location(self):
+        """Return location if agent takes its action---relevant for navigation planner."""
+        return tuple(np.asarray(self.location) + np.asarray(self.action))
+
+
+##################################################################################
+# README! --- TASK: Implement your agent(s) here. 
+#
+# YourAgent: Your agent that performs task inference and plans.
+#   - This class is a template for your agent implementation.
+#   - You must modify this class to implement your own agent.
+#   - You can add your own class variables and functions.
+#   - Feel free to rename this class and to add new agent classes to suit
+#       your own implementation and strategic choices.
+##################################################################################
+class YourAgent(BaseAgent):
+    """Your Agent object that performs task inference and plans."""
+    #-----Feel free to add your own class variables-----
+    
+    def __init__(self, arglist, name, id_color, recipes):
+        super().__init__(arglist, name, id_color, recipes)
+
+        #-----Feel free to add your own init procedure-----
+        # self.your_var = your_var
+        # self.new_value = your_function()
+
+        # Navigation planner.
+        #-----Feel free to replace with your own planner-----
+        self.planner = E2E_BRTDP(
+                alpha=arglist.alpha,
+                tau=arglist.tau,
+                cap=arglist.cap,
+                main_cap=arglist.main_cap)
+    
+    # Replace with your own action selection logic
+    def select_action(self, obs):
+        """Return best next action for this agent given observations."""
+        sim_agent = list(filter(lambda x: x.name == self.name, obs.sim_agents))[0]
+        self.location = sim_agent.location
+        self.holding = sim_agent.holding
+        self.action = sim_agent.action
+        
+        actions = nav_utils.get_single_actions(env=copy.copy(obs), agent=self) # returns a list of VALID actions    
+        return actions[np.random.choice(len(actions))] # currently chooses a random action
+    
+    #-----Feel free to add your own helper functions-----
+
+
+##################################################################################
+# Feel free to create new agent classes below that inheret from BaseAgent.
+##################################################################################
 
 class RealAgent:
     """Real Agent object that performs task inference and plans."""
@@ -61,7 +176,7 @@ class RealAgent:
         return color(self.name[-1], self.color)
 
     def __copy__(self):
-        a = Agent(arglist=self.arglist,
+        a = RealAgent(arglist=self.arglist,
                 name=self.name,
                 id_color=self.color,
                 recipes=self.recipes)
@@ -256,6 +371,16 @@ class RealAgent:
             self.is_subtask_complete = lambda w: len(w.get_all_object_locs(obj=self.goal_obj)) > self.cur_obj_count
 
 
+##################################################################################
+# README! --- SimAgent: Simulation agent used in the environment object.
+# IMPORTANT: Do NOT modify this class.
+# This class is used in the environment object to represent agents.
+# Read through the class to understand which variables interact with 
+# the environment directly. Agents can aquire objects, hold objects,
+# release objects, and move around the environment.
+# NOTE: merging objects is destructive: this action cannot be undone. Be careful!
+# Merging examples: placing an ingredient on a plate, cutting an ingredient, etc.
+##################################################################################
 class SimAgent:
     """Simulation agent used in the environment object."""
 
