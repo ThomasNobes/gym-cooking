@@ -107,9 +107,9 @@ def main_loop(arglist):
         obs, reward, done, info = env.step(action_dict=action_dict)
 
         # Agents
-        for agent in agents:
-            if type(agent) == YourAgent:
-                agent.refresh_subtasks(world=env.world)
+        # for agent in agents:
+        #     if type(agent) == YourAgent:
+        #         agent.refresh_subtasks(world=env.world)
 
         # Saving info
         bag.add_status(cur_time=info['t'], agents=agents)

@@ -45,25 +45,25 @@ class Bag:
             self.data["states"][a.name].append(copy.copy(a.location))
             self.data["holding"][a.name].append(a.get_holding())
             self.data["actions"][a.name].append(a.action)
-            self.data["subtasks"][a.name].append(a.subtask)
-            self.data["subtask_agents"][a.name].append(a.subtask_agent_names)
-            self.data["incomplete_subtasks"][a.name].append(a.incomplete_subtasks)
+        #     self.data["subtasks"][a.name].append(a.subtask)
+        #     self.data["subtask_agents"][a.name].append(a.subtask_agent_names)
+        #     self.data["incomplete_subtasks"][a.name].append(a.incomplete_subtasks)
 
-            for task_combo, p in a.delegator.probs.get_list():
-                self.data["bayes"][a.name].setdefault(cur_time, [])
-                self.data["bayes"][a.name][cur_time].append((task_combo, p))
+        #     for task_combo, p in a.delegator.probs.get_list():
+        #         self.data["bayes"][a.name].setdefault(cur_time, [])
+        #         self.data["bayes"][a.name][cur_time].append((task_combo, p))
 
-        incomplete_subtasks = set(self.data["all_subtasks"])
-        for a in agents:
-            incomplete_subtasks = incomplete_subtasks & set(a.incomplete_subtasks)
-        self.data["num_completed_subtasks"].append(self.data["num_total_subtasks"] - len(incomplete_subtasks))
+        # incomplete_subtasks = set(self.data["all_subtasks"])
+        # for a in agents:
+        #     incomplete_subtasks = incomplete_subtasks & set(a.incomplete_subtasks)
+        # self.data["num_completed_subtasks"].append(self.data["num_total_subtasks"] - len(incomplete_subtasks))
 
     def set_termination(self, termination_info, successful):
         self.data["termination"] = termination_info
         self.data["was_successful"] = successful
-        for k, v in self.data.items():
-            print("{}: {}\n".format(k, v))
+        # for k, v in self.data.items():
+            #print("{}: {}\n".format(k, v))
         self.data["num_completed_subtasks_end"] = 0 if len(self.data["num_completed_subtasks"]) == 0 else self.data["num_completed_subtasks"][-1]
-        print('completed {} / {} subtasks'.format(self.data["num_completed_subtasks_end"], self.data["num_total_subtasks"]))
+        #print('completed {} / {} subtasks'.format(self.data["num_completed_subtasks_end"], self.data["num_total_subtasks"]))
         pickle.dump(self.data, open(self.directory+self.filename+'.pkl', "wb"))
-        print("Saved to {}".format(self.directory+self.filename+'.pkl'))
+        #print("Saved to {}".format(self.directory+self.filename+'.pkl'))
