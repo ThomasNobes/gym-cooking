@@ -6,6 +6,7 @@ class Color:
     FLOOR = (245, 230, 210)  # light gray
     COUNTER = (220, 170, 110)   # tan/gray
     COUNTER_BORDER = (114, 93, 51)  # darker tan
+    SPAWNER = (255, 165, 0)  # orange
     DELIVERY = (96, 96, 96)  # grey
 
 KeyToTuple = {

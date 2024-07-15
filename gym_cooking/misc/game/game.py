@@ -99,6 +99,10 @@ class Game:
             pygame.draw.rect(self.screen, Color.COUNTER, fill)
             pygame.draw.rect(self.screen, Color.COUNTER_BORDER, fill, 1)
             self.draw('trash', self.tile_size, sl)
+        
+        elif isinstance(gs, FoodSpawner):
+            pygame.draw.rect(self.screen, Color.SPAWNER, fill)
+            pygame.draw.rect(self.screen, Color.COUNTER_BORDER, fill, 1)
 
         return
 

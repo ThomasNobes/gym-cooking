@@ -102,8 +102,20 @@ class OvercookedEnvironment(gym.Env):
                 # Phase 1: Read in kitchen map.
                 elif phase == 1:
                     for x, rep in enumerate(line):
-                        # Object, i.e. Tomato, Lettuce, Onion, or Plate.
-                        if rep in 'tlop':
+                        # FoodSpawner, i.e. Tomato, Lettuce, or Onion.
+                        if rep in 'TLO':
+                            obj = Object(
+                                    location=(x, y),
+                                    contents=RepToClass[rep.lower()]())
+                            spawner = FoodSpawner(
+                                        object=obj,
+                                        rep=rep,
+                                        location=(x, y))
+                            spawner.acquire(obj=obj)
+                            self.world.insert(obj=spawner)
+                            self.world.insert(obj=obj)
+                        # Object, i.e. Tomato, Lettuce, Onion or Plate.
+                        elif rep in 'tlop':
                             counter = Counter(location=(x, y))
                             obj = Object(
                                     location=(x, y),

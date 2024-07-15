@@ -27,6 +27,10 @@ def interact(agent, world):
                 gs.acquire(obj)
                 agent.release()
                 print('\nDelivered {}!'.format(obj.full_name))
+        
+        # if food spawner in front --> do not interact
+        elif isinstance(gs, FoodSpawner):
+            pass
 
         # if occupied gridsquare in front --> try merging
         elif world.is_occupied(gs.location):
@@ -75,8 +79,11 @@ def interact(agent, world):
             if isinstance(gs, Cutboard) and obj.needs_chopped() and world.arglist.play:
                 obj.chop()
             else:
-                gs.release()
-                agent.acquire(obj)
+                held_obj = gs.release()
+                assert held_obj == obj, "Verifying held object is the same as object on gridsquare"
+                agent.acquire(held_obj)
+                if isinstance(gs, FoodSpawner): # add new food to world if spawner
+                    world.insert(held_obj)
 
         # if empty in front --> interact
         elif not world.is_occupied(gs.location):

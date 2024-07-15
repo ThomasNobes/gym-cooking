@@ -20,6 +20,9 @@ class Rep:
     COUNTER = '-'
     CUTBOARD = '/'
     DELIVERY = '*'
+    TOMATOSPAWNER = 'T'
+    LETTUCESPAWNER = 'L'
+    ONIONSPAWNER = 'O'
     TOMATO = 't'
     LETTUCE = 'l'
     ONION = 'o'
@@ -63,6 +66,21 @@ class Floor(GridSquare):
         self.color = None
         self.rep = Rep.FLOOR
         self.collidable = False
+    def __eq__(self, other):
+        return GridSquare.__eq__(self, other)
+    def __hash__(self):
+        return GridSquare.__hash__(self)
+
+class FoodSpawner(GridSquare):
+    def __init__(self, object, rep, location):
+        GridSquare.__init__(self, "FoodSpawner", location)
+        self.rep = rep
+        self.collidable = True
+        self.holding = object
+    def acquire(self, obj):
+        pass # cannot acquire new objects
+    def release(self):
+        return copy.copy(self.holding) # do not clear holding
     def __eq__(self, other):
         return GridSquare.__eq__(self, other)
     def __hash__(self):
@@ -369,6 +387,9 @@ RepToClass = {
     Rep.LETTUCE: globals()['Lettuce'],
     Rep.ONION: globals()['Onion'],
     Rep.PLATE: globals()['Plate'],
+    Rep.TOMATOSPAWNER: globals()['FoodSpawner'],
+    Rep.LETTUCESPAWNER: globals()['FoodSpawner'],
+    Rep.ONIONSPAWNER: globals()['FoodSpawner'],
 }
 
 
