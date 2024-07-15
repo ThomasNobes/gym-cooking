@@ -51,10 +51,15 @@ def interact(agent, world):
             if isinstance(gs, Cutboard) and obj.needs_chopped() and not world.arglist.play:
                 # normally chop, but if in playable game mode then put down first
                 obj.chop()
-            if isinstance(gs, Trash):
-                gs.acquire(obj) # obj is put onto gridsquare
+            elif isinstance(gs, Trash):
                 agent.release()
                 world.remove(obj) # remove obj from world
+                if obj.contains('Plate'):
+                    new_plate = Object(
+                                location=obj.location,
+                                contents=RepToClass['p']())
+                    agent.acquire(new_plate)
+                    world.insert(new_plate)
             else:
                 gs.acquire(obj) # obj is put onto gridsquare
                 agent.release()
