@@ -111,7 +111,7 @@ class OvercookedEnvironment(gym.Env):
                             counter.acquire(obj=obj)
                             self.world.insert(obj=counter)
                             self.world.insert(obj=obj)
-                        # GridSquare, i.e. Floor, Counter, Cutboard, Delivery.
+                        # GridSquare, i.e. Floor, Counter, Cutboard, Delivery, Trash.
                         elif rep in RepToClass:
                             newobj = RepToClass[rep]((x, y))
                             self.world.objects.setdefault(newobj.name, []).append(newobj)
@@ -438,7 +438,7 @@ class OvercookedEnvironment(gym.Env):
 
     def cache_distances(self):
         """Saving distances between world objects."""
-        counter_grid_names = [name for name in self.world.objects if "Supply" in name or "Counter" in name or "Delivery" in name or "Cut" in name]
+        counter_grid_names = [name for name in self.world.objects if "Supply" in name or "Counter" in name or "Delivery" in name or "Trash" in name or "Cut" in name]
         # Getting all source objects.
         source_objs = copy.copy(self.world.objects["Floor"])
         for name in counter_grid_names:

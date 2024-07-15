@@ -24,6 +24,7 @@ class Rep:
     LETTUCE = 'l'
     ONION = 'o'
     PLATE = 'p'
+    TRASH = '.'
 
 class GridSquare:
     def __init__(self, name, location):
@@ -110,6 +111,18 @@ class Delivery(GridSquare):
         if self.holding:
             return self.holding.pop()
         else: return None
+    def __eq__(self, other):
+        return GridSquare.__eq__(self, other)
+    def __hash__(self):
+        return GridSquare.__hash__(self)
+
+class Trash(GridSquare):
+    def __init__(self, location):
+        GridSquare.__init__(self, "Trash", location)
+        self.rep = Rep.TRASH
+        self.collidable = True
+    def acquire(self, obj):
+        obj.location = None
     def __eq__(self, other):
         return GridSquare.__eq__(self, other)
     def __hash__(self):
@@ -351,6 +364,7 @@ RepToClass = {
     Rep.COUNTER: globals()['Counter'],
     Rep.CUTBOARD: globals()['Cutboard'],
     Rep.DELIVERY: globals()['Delivery'],
+    Rep.TRASH: globals()['Trash'],
     Rep.TOMATO: globals()['Tomato'],
     Rep.LETTUCE: globals()['Lettuce'],
     Rep.ONION: globals()['Onion'],
