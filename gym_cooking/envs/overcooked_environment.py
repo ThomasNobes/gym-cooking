@@ -46,6 +46,7 @@ class OvercookedEnvironment(gym.Env):
         self.collisions = []
         self.termination_info = ""
         self.successful = False
+        self.score = 0
 
     def get_repr(self):
         return self.world.get_repr() + tuple([agent.get_repr() for agent in self.sim_agents])
@@ -166,6 +167,7 @@ class OvercookedEnvironment(gym.Env):
         self.collisions = []
         self.termination_info = ""
         self.successful = False
+        self.score = 0
 
         # Load world & distances.
         self.load_level(
@@ -242,24 +244,30 @@ class OvercookedEnvironment(gym.Env):
         assert any([isinstance(subtask, recipe.Deliver) for subtask in self.all_subtasks]), "no delivery subtask"
 
         # Done if subtask is completed.
+        num_deliveries = 0
+        num_deliveries_completed = 0
         for subtask in self.all_subtasks:
             # Double check all goal_objs are at Delivery.
             if isinstance(subtask, recipe.Deliver):
+                num_deliveries += 1
                 _, goal_obj = nav_utils.get_subtask_obj(subtask)
-
                 delivery_loc = list(filter(lambda o: o.name=='Delivery', self.world.get_object_list()))[0].location
                 goal_obj_locs = self.world.get_all_object_locs(obj=goal_obj)
-                if not any([gol == delivery_loc for gol in goal_obj_locs]):
-                    self.termination_info = ""
-                    self.successful = False
-                    return False
-
-        self.termination_info = "Terminating because all deliveries were completed"
-        self.successful = True
-        return True
+                if any([gol == delivery_loc for gol in goal_obj_locs]):
+                    num_deliveries_completed += 1
+        self.score = num_deliveries_completed
+                    
+        if num_deliveries_completed == num_deliveries:
+            self.termination_info = "Terminating because all deliveries were completed"
+            self.successful = True
+            return True
+        else:
+            self.termination_info = ""
+            self.successful = False
+            return False
 
     def reward(self):
-        return 1 if self.successful else 0
+        return self.score
 
     def print_agents(self):
         for sim_agent in self.sim_agents:
