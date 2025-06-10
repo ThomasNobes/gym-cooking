@@ -17,9 +17,10 @@ from navigation_planner.utils import get_single_actions
 
 
 class GamePlay(Game):
-    def __init__(self, filename, world, sim_agents):
-        Game.__init__(self, world, sim_agents, play=True)
-        self.filename = filename
+    def __init__(self, env):
+        Game.__init__(self, env.world, env.sim_agents, play=True)
+        self.env = env
+        self.filename = env.filename
         self.save_dir = 'misc/game/screenshots'
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
@@ -57,14 +58,19 @@ class GamePlay(Game):
             if event.key in KeyToTuple.keys():
                 action = KeyToTuple[event.key]
                 self.current_agent.action = action
-                interact(self.current_agent, self.world)
+                # add wait action for all other agents
+                action_dict = {}
+                for agent in self.sim_agents:
+                    action_dict[agent.name] = (0, 0)
+                action_dict[self.current_agent.name] = action
+                obs, reward, done, info = self.env.step(action_dict)
 
 
     def on_execute(self):
         if self.on_init() == False:
             self._running = False
 
-        while self._running:
+        while self._running and not self.env.done():
             for event in pygame.event.get():
                 self.on_event(event)
             self.on_render()

@@ -126,7 +126,8 @@ if __name__ == '__main__':
     if arglist.play:
         env = gym.envs.make("gym_cooking:overcookedEnv-v0", arglist=arglist)
         env.reset()
-        game = GamePlay(env.filename, env.world, env.sim_agents)
+        game = GamePlay(env)
+        # game = GamePlay(env.filename, env.world, env.sim_agents)
         game.on_execute()
     # test environment for replaying a saved game
     elif arglist.replay is not None:
