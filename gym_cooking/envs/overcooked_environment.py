@@ -198,7 +198,7 @@ class OvercookedEnvironment(gym.Env):
         # Track internal environment info.
         self.t += 1
         print("===============================")
-        print("[environment.step] @ TIMESTEP {}".format(self.t))
+        print("[environment.step] @ TIMESTEP {} | SCORE: {}".format(self.t, self.score))
         print("===============================")
 
         # Get actions.
