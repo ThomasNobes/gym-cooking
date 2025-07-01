@@ -101,27 +101,49 @@ class SimpleOnion(Recipe):
     def __str__(self):
         return 'ChoppedOnion'
 
-class Salad(Recipe):
+class LettuceOnionSalad(Recipe):
     def __init__(self):
-        Recipe.__init__(self, 'Salad')
+        Recipe.__init__(self, 'LettuceOnionSalad')
         self.add_ingredient(Plate())
-        self.add_ingredient(Tomato(state_index=-1))
-        self.add_ingredient(Lettuce(state_index=-1))
-        self.add_goal()
-        self.add_merge_actions()
-    def __str__(self):
-        return 'Salad'
-
-class OnionSalad(Recipe):
-    def __init__(self):
-        Recipe.__init__(self, 'OnionSalad')
-        self.add_ingredient(Plate())
-        self.add_ingredient(Tomato(state_index=-1))
         self.add_ingredient(Lettuce(state_index=-1))
         self.add_ingredient(Onion(state_index=-1))
         self.add_goal()
         self.add_merge_actions()
     def __str__(self):
-        return 'OnionSalad'
+        return 'LettuceOnionSalad'
+
+class TomatoOnionSalad(Recipe):
+    def __init__(self):
+        Recipe.__init__(self, 'TomatoOnionSalad')
+        self.add_ingredient(Plate())
+        self.add_ingredient(Tomato(state_index=-1))
+        self.add_ingredient(Onion(state_index=-1))
+        self.add_goal()
+        self.add_merge_actions()
+    def __str__(self):
+        return 'TomatoOnionSalad'
+
+class LettuceTomatoSalad(Recipe):
+    def __init__(self):
+        Recipe.__init__(self, 'LettuceTomatoSalad')
+        self.add_ingredient(Plate())
+        self.add_ingredient(Lettuce(state_index=-1))
+        self.add_ingredient(Tomato(state_index=-1))
+        self.add_goal()
+        self.add_merge_actions()
+    def __str__(self):
+        return 'LettuceTomatoSalad'
+
+class AllSalad(Recipe):
+    def __init__(self):
+        Recipe.__init__(self, 'AllSalad')
+        self.add_ingredient(Plate())
+        self.add_ingredient(Lettuce(state_index=-1))
+        self.add_ingredient(Tomato(state_index=-1))
+        self.add_ingredient(Onion(state_index=-1))
+        self.add_goal()
+        self.add_merge_actions()
+    def __str__(self):
+        return 'AllSalad'
 
 

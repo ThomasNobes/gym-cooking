@@ -1,0 +1,15 @@
+----.T-
+/  t  L
+/  l  O
+*  o  -
+-  p  -
+-     p
+-s---p-
+
+LettuceTomatoSalad
+AllSalad
+
+2 1
+4 1
+4 4
+2 4
