@@ -2,7 +2,7 @@
 # from gym_cooking.envs import OvercookedEnvironment
 from recipe_planner.recipe import *
 from utils.world import World
-from utils.agent import YourAgent, SimAgent, COLORS
+from utils.agent import YourAgent, COLORS
 from utils.core import *
 from misc.game.gameplay import GamePlay
 from misc.metrics.metrics_bag import Bag
