@@ -151,6 +151,7 @@ class OvercookedEnvironment(gym.Env):
         self.world.width = x+1
         self.world.height = y
         self.world.perimeter = 2*(self.world.width + self.world.height)
+        self.world.active_orders = copy.copy(self.recipes)
 
 
     def reset(self):
@@ -197,9 +198,10 @@ class OvercookedEnvironment(gym.Env):
     def step(self, action_dict):
         # Track internal environment info.
         self.t += 1
-        print("===============================")
-        print("[environment.step] @ TIMESTEP {} | SCORE: {}".format(self.t, self.score))
-        print("===============================")
+        step_str = "[environment.step] @ TIMESTEP {} | SCORE: {} | ORDERS: {}".format(self.t, self.score, [str(r) for r in self.world.active_orders])
+        print("="*len(step_str))
+        print(step_str)
+        print("="*len(step_str))
 
         # Get actions.
         for sim_agent in self.sim_agents:
@@ -241,22 +243,11 @@ class OvercookedEnvironment(gym.Env):
             self.successful = False
             return True
 
-        assert any([isinstance(subtask, recipe.Deliver) for subtask in self.all_subtasks]), "no delivery subtask"
-
-        # Done if subtask is completed.
-        num_deliveries = 0
-        num_deliveries_completed = 0
-        for subtask in self.all_subtasks:
-            # Double check all goal_objs are at Delivery.
-            if isinstance(subtask, recipe.Deliver):
-                num_deliveries += 1
-                _, goal_obj = nav_utils.get_subtask_obj(subtask)
-                delivery_loc = list(filter(lambda o: o.name=='Delivery', self.world.get_object_list()))[0].location
-                goal_obj_locs = self.world.get_all_object_locs(obj=goal_obj)
-                if any([gol == delivery_loc for gol in goal_obj_locs]):
-                    num_deliveries_completed += 1
-        self.score = num_deliveries_completed
-                    
+        # Done if no more recipes to deliver
+        num_deliveries = len(self.recipes)
+        num_deliveries_completed = num_deliveries - len(self.world.active_orders)
+        
+        # print("num deliveries: {} | num deliveries completed: {}".format(num_deliveries, num_deliveries_completed))
         if num_deliveries_completed == num_deliveries:
             self.termination_info = "Terminating because all deliveries were completed"
             self.successful = True

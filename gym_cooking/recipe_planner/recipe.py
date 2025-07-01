@@ -6,22 +6,28 @@ class Recipe:
     def __init__(self, name):
         self.name = name
         self.contents = []
+        self.ingredients = []
         self.actions = set()
         self.actions.add(recipe.Get('Plate'))
 
     def __str__(self):
         return self.name
 
+    def get_ingredients(self):
+        return "-".join(list(map(lambda x : str(x), sorted(self.contents, key=lambda i: i.name))))
+
     def add_ingredient(self, item):
         self.contents.append(item)
+        self.ingredients.append(item.name)   # list of strings
 
         # always starts with FRESH
         self.actions.add(recipe.Get(item.name))
 
-        if item.state_seq == FoodSequence.FRESH_CHOPPED:
-            self.actions.add(recipe.Chop(item.name))
-            self.actions.add(recipe.Merge(item.name, 'Plate',\
-                [item.state_seq[-1](item.name), recipe.Fresh('Plate')], None))
+        if item.name != 'Plate':
+            if item.state_seq == FoodSequence.FRESH_CHOPPED:
+                self.actions.add(recipe.Chop(item.name))
+                self.actions.add(recipe.Merge(item.name, 'Plate',\
+                    [item.state_seq[-1](item.name), recipe.Fresh('Plate')], None))
 
     def add_goal(self):
         self.contents = sorted(self.contents, key = lambda x: x.name)   # list of Food objects
@@ -68,6 +74,7 @@ class Recipe:
 class SimpleTomato(Recipe):
     def __init__(self):
         Recipe.__init__(self, 'Tomato')
+        self.add_ingredient(Plate())
         self.add_ingredient(Tomato(state_index=-1))
         self.add_goal()
         self.add_merge_actions()
@@ -75,6 +82,7 @@ class SimpleTomato(Recipe):
 class SimpleLettuce(Recipe):
     def __init__(self):
         Recipe.__init__(self, 'Lettuce')
+        self.add_ingredient(Plate())
         self.add_ingredient(Lettuce(state_index=-1))
         self.add_goal()
         self.add_merge_actions()
@@ -82,6 +90,7 @@ class SimpleLettuce(Recipe):
 class Salad(Recipe):
     def __init__(self):
         Recipe.__init__(self, 'Salad')
+        self.add_ingredient(Plate())
         self.add_ingredient(Tomato(state_index=-1))
         self.add_ingredient(Lettuce(state_index=-1))
         self.add_goal()
@@ -90,6 +99,7 @@ class Salad(Recipe):
 class OnionSalad(Recipe):
     def __init__(self):
         Recipe.__init__(self, 'OnionSalad')
+        self.add_ingredient(Plate())
         self.add_ingredient(Tomato(state_index=-1))
         self.add_ingredient(Lettuce(state_index=-1))
         self.add_ingredient(Onion(state_index=-1))

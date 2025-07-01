@@ -27,6 +27,7 @@ class World:
         self.rep = [] # [row0, row1, ..., rown]
         self.arglist = arglist
         self.objects = defaultdict(lambda : [])
+        self.active_orders = []  # List of active recipes in the world.
 
     def get_repr(self):
         return self.get_dynamic_objects()

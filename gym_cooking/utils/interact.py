@@ -23,9 +23,14 @@ def interact(agent, world):
         # if delivery in front --> deliver
         if isinstance(gs, Delivery):
             obj = agent.holding
+            gs.acquire(obj)
+            agent.release()
             if obj.is_deliverable():
-                gs.acquire(obj)
-                agent.release()
+                gs.release()  # remove delivery from kitchen
+                for recipe in world.active_orders:
+                    if str(obj) == recipe.get_ingredients():
+                        world.active_orders.remove(recipe)
+                        break
                 print('\nDelivered {}!'.format(obj.full_name))
         
         # if food spawner in front --> do not interact
