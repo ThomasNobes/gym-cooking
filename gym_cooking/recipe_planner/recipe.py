@@ -78,6 +78,8 @@ class SimpleTomato(Recipe):
         self.add_ingredient(Tomato(state_index=-1))
         self.add_goal()
         self.add_merge_actions()
+    def __str__(self):
+        return 'ChoppedTomato'
 
 class SimpleLettuce(Recipe):
     def __init__(self):
@@ -86,6 +88,8 @@ class SimpleLettuce(Recipe):
         self.add_ingredient(Lettuce(state_index=-1))
         self.add_goal()
         self.add_merge_actions()
+    def __str__(self):
+        return 'ChoppedLettuce'
 
 class SimpleOnion(Recipe):
     def __init__(self):
@@ -94,6 +98,8 @@ class SimpleOnion(Recipe):
         self.add_ingredient(Onion(state_index=-1))
         self.add_goal()
         self.add_merge_actions()
+    def __str__(self):
+        return 'ChoppedOnion'
 
 class Salad(Recipe):
     def __init__(self):
@@ -103,6 +109,8 @@ class Salad(Recipe):
         self.add_ingredient(Lettuce(state_index=-1))
         self.add_goal()
         self.add_merge_actions()
+    def __str__(self):
+        return 'Salad'
 
 class OnionSalad(Recipe):
     def __init__(self):
@@ -113,5 +121,7 @@ class OnionSalad(Recipe):
         self.add_ingredient(Onion(state_index=-1))
         self.add_goal()
         self.add_merge_actions()
+    def __str__(self):
+        return 'OnionSalad'
 
 
