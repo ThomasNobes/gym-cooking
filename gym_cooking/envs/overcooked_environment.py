@@ -442,9 +442,12 @@ class OvercookedEnvironment(gym.Env):
             print("{} has action {}".format(color(agent.name, agent.color), agent.action))
 
     def execute_navigation(self):
+        active_orders = copy.copy(self.world.active_orders)
         for agent in self.sim_agents:
             interact(agent=agent, world=self.world)
             self.agent_actions[agent.name] = agent.action
+        num_deliveries = len(active_orders) - len(self.world.active_orders)
+        self.score += num_deliveries
 
 
     def cache_distances(self):
