@@ -7,13 +7,15 @@ import random
 from queue import PriorityQueue
 
 StringToGridSquare = {
-        "Tomato"   : Counter,
-        "Lettuce"  : Counter,
-        "Onion"    : Counter,
-        "Plate"    : Counter,
-        "Cutboard" : Cutboard,
-        "Delivery" : Delivery,
-        "Trash"    : Trash,
+        "Tomato"     : Counter,
+        "Lettuce"    : Counter,
+        "Onion"      : Counter,
+        "Plate"      : Counter,
+        "DirtyPlate" : Counter,
+        "Cutboard"   : Cutboard,
+        "Delivery"   : Delivery,
+        "Trash"      : Trash,
+        "Sink"       : Sink,
         }
 
 StringToObject = {

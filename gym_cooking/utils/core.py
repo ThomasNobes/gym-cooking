@@ -27,7 +27,9 @@ class Rep:
     LETTUCE = 'l'
     ONION = 'o'
     PLATE = 'p'
+    DIRTYPLATE = 'd'
     TRASH = '.'
+    SINK = 's'
 
 class GridSquare:
     def __init__(self, name, location):
@@ -141,6 +143,21 @@ class Trash(GridSquare):
         self.collidable = True
     def acquire(self, obj):
         obj.location = None
+    def __eq__(self, other):
+        return GridSquare.__eq__(self, other)
+    def __hash__(self):
+        return GridSquare.__hash__(self)
+
+class Sink(GridSquare):
+    def __init__(self, location):
+        GridSquare.__init__(self, "Sink", location)
+        self.rep = Rep.SINK
+        self.collidable = True
+    def acquire(self, obj):
+        if isinstance(obj, DirtyPlate):
+            obj = Plate()  # make clean plate
+        obj.location = self.location
+        self.holding = obj
     def __eq__(self, other):
         return GridSquare.__eq__(self, other)
     def __hash__(self):
@@ -373,6 +390,22 @@ class Plate:
     def needs_chopped(self):
         return False
 
+class DirtyPlate:
+    def __init__(self):
+        self.rep = "d"
+        self.name = 'DirtyPlate'
+        self.full_name = 'DirtyPlate'
+        self.color = 'white'
+    def __hash__(self):
+        return hash((self.name))
+    def __str__(self):
+        return color(self.rep, self.color)
+    def __eq__(self, other):
+        return isinstance(other, Plate)
+    def __copy__(self):
+        return Plate()
+    def needs_chopped(self):
+        return False
 
 # -----------------------------------------------------------
 # PARSING
