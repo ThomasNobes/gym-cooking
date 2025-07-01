@@ -87,6 +87,14 @@ class SimpleLettuce(Recipe):
         self.add_goal()
         self.add_merge_actions()
 
+class SimpleOnion(Recipe):
+    def __init__(self):
+        Recipe.__init__(self, 'Onion')
+        self.add_ingredient(Plate())
+        self.add_ingredient(Onion(state_index=-1))
+        self.add_goal()
+        self.add_merge_actions()
+
 class Salad(Recipe):
     def __init__(self):
         Recipe.__init__(self, 'Salad')
