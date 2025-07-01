@@ -228,6 +228,8 @@ class OvercookedEnvironment(gym.Env):
             image_obs = self.game.get_image_obs()
 
         done = self.done()
+        if done:
+            print(self.termination_info)
         reward = self.reward()
         info = {"t": self.t, "obs": new_obs,
                 "image_obs": image_obs,
@@ -284,7 +286,7 @@ class OvercookedEnvironment(gym.Env):
         # [path for recipe 1, path for recipe 2, ...] where each path is a list of actions
         subtasks = self.sw.get_subtasks(max_path_length=self.arglist.max_num_subtasks)
         all_subtasks = [subtask for path in subtasks for subtask in path]
-        print('Subtasks:', all_subtasks, '\n')
+        # print('Subtasks:', all_subtasks, '\n')
         return all_subtasks
 
     def get_AB_locs_given_objs(self, subtask, subtask_agent_names, start_obj, goal_obj, subtask_action_obj):
